@@ -1,4 +1,4 @@
-name: Print CPU Info
+name: NVHPC Matrix Test
 
 on:
   push:
@@ -7,7 +7,18 @@ on:
 
 jobs:
   cpuinfo:
+    name: NVHPC ${{ matrix.nvhpc }}
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - nvhpc: "25.1"
+            image: nvcr.io/nvidia/nvhpc:25.1-devel-cuda12.6-ubuntu22.04
+          - nvhpc: "26.1"
+            image: nvcr.io/nvidia/nvhpc:26.1-devel-cuda13.1-ubuntu22.04
+          - nvhpc: "26.3"
+            image: nvcr.io/nvidia/nvhpc:26.3-devel-cuda13.1-ubuntu22.04
 
     steps:
       - name: Print /proc/cpuinfo
@@ -16,10 +27,10 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v4
 
-      - name: Compile and run test.f90 in NVIDIA HPC SDK 26.1 container
+      - name: Compile and run test.f90 in NVIDIA HPC SDK ${{ matrix.nvhpc }} container
         run: |
           docker run --rm --pull always \
             -v "$GITHUB_WORKSPACE:/workspace" \
             -w /workspace \
-            nvcr.io/nvidia/nvhpc:26.1-devel-cuda13.1-ubuntu22.04 \
+            "${{ matrix.image }}" \
             bash -lc 'nvfortran -fast -O3 -v test.f90 -o test && ./test'
