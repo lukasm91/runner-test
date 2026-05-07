@@ -33,4 +33,11 @@ jobs:
             -v "$GITHUB_WORKSPACE:/workspace" \
             -w /workspace \
             "${{ matrix.image }}" \
-            bash -lc 'nvfortran -fast -O3 -v test.f90 -o test && ./test'
+            bash -lc '
+              set -x
+              nvfortran -fast -O3 -v test.f90 -o out
+              ./out
+              run_rc=$?
+              echo "./out returned ${run_rc}"
+              exit "${run_rc}"
+            '
