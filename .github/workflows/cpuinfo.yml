@@ -13,5 +13,13 @@ jobs:
       - name: Print /proc/cpuinfo
         run: cat /proc/cpuinfo
 
-      - name: Print nvfortran version in NVIDIA HPC SDK container
-        run: docker run --rm nvcr.io/nvidia/nvhpc:26.1-devel-cuda13.1-ubuntu22.04 nvfortran --version
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Compile and run test.f90 in NVIDIA HPC SDK 26.1 container
+        run: |
+          docker run --rm --pull always \
+            -v "$GITHUB_WORKSPACE:/workspace" \
+            -w /workspace \
+            nvcr.io/nvidia/nvhpc:26.1-devel-cuda13.1-ubuntu22.04 \
+            bash -lc 'nvfortran -fast -O3 -v test.f90 -o test && ./test'
