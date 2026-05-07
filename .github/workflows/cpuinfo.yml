@@ -1,0 +1,14 @@
+name: Print CPU Info
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  cpuinfo:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Print /proc/cpuinfo
+        run: cat /proc/cpuinfo
