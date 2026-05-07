@@ -8,12 +8,10 @@ on:
 jobs:
   cpuinfo:
     runs-on: ubuntu-latest
-    container:
-      image: nvcr.io/nvidia/nvhpc:26.1-devel-cuda13.1-ubuntu22.04
 
     steps:
       - name: Print /proc/cpuinfo
         run: cat /proc/cpuinfo
 
-      - name: Print nvfortran version
-        run: nvfortran --version
+      - name: Print nvfortran version in NVIDIA HPC SDK container
+        run: docker run --rm nvcr.io/nvidia/nvhpc:26.1-devel-cuda13.1-ubuntu22.04 nvfortran --version
