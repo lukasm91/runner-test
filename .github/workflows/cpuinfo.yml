@@ -118,7 +118,7 @@ jobs:
       image: nvcr.io/nvidia/nvhpc:25.1-devel-cuda12.6-ubuntu22.04
       variant: mth-iarch-avx2
       compile_flags: ""
-      run_env: "MTH_IARCH=avx2"
+      run_env: "MTH_I_ARCH=avx2"
 
   nvhpc-25-1-mth-iarch-avx2-run-2:
     name: NVHPC 25.1 / mth-iarch-avx2 / run 2
@@ -274,7 +274,7 @@ jobs:
       image: nvcr.io/nvidia/nvhpc:26.1-devel-cuda13.1-ubuntu22.04
       variant: mth-iarch-avx2
       compile_flags: ""
-      run_env: "MTH_IARCH=avx2"
+      run_env: "MTH_I_ARCH=avx2"
 
   nvhpc-26-1-mth-iarch-avx2-run-2:
     name: NVHPC 26.1 / mth-iarch-avx2 / run 2
@@ -430,7 +430,7 @@ jobs:
       image: nvcr.io/nvidia/nvhpc:26.3-devel-cuda13.1-ubuntu22.04
       variant: mth-iarch-avx2
       compile_flags: ""
-      run_env: "MTH_IARCH=avx2"
+      run_env: "MTH_I_ARCH=avx2"
 
   nvhpc-26-3-mth-iarch-avx2-run-2:
     name: NVHPC 26.3 / mth-iarch-avx2 / run 2
