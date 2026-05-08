@@ -6,13 +6,12 @@ on:
       - main
 
 jobs:
-  cpuinfo:
-    name: NVHPC ${{ matrix.config.nvhpc }} / ${{ matrix.variant.name }} / run ${{ matrix.repeat }}
+  run-1:
+    name: NVHPC ${{ matrix.config.nvhpc }} / ${{ matrix.variant.name }} / run 1
     runs-on: ubuntu-latest
-    strategy:
+    strategy: &test_strategy
       fail-fast: false
       matrix:
-        repeat: [1, 2, 3, 4, 5]
         config:
           - nvhpc: "25.1"
             image: nvcr.io/nvidia/nvhpc:25.1-devel-cuda12.6-ubuntu22.04
@@ -31,14 +30,25 @@ jobs:
             compile_flags: ""
             run_env: "MTH_IARCH=avx2"
 
-    steps:
-      - name: Print /proc/cpuinfo
-        run: cat /proc/cpuinfo
+    steps: &test_steps
+      - name: Check runner CPU
+        id: cpu
+        run: |
+          cat /proc/cpuinfo
+
+          if grep -Fq "AMD EPYC 9V74 80-Core Processor" /proc/cpuinfo; then
+            echo "run_tests=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "run_tests=false" >> "$GITHUB_OUTPUT"
+            echo "Target CPU not found; passing this matrix job without running the test."
+          fi
 
       - name: Check out repository
+        if: steps.cpu.outputs.run_tests == 'true'
         uses: actions/checkout@v4
 
       - name: Compile and run ${{ matrix.variant.name }} test.f90 in NVIDIA HPC SDK ${{ matrix.config.nvhpc }} container
+        if: steps.cpu.outputs.run_tests == 'true'
         run: |
           docker run --rm --pull always \
             -v "$GITHUB_WORKSPACE:/workspace" \
@@ -52,3 +62,52 @@ jobs:
               echo "./out returned ${run_rc}"
               exit "${run_rc}"
             '
+
+  run-2:
+    name: NVHPC ${{ matrix.config.nvhpc }} / ${{ matrix.variant.name }} / run 2
+    needs: run-1
+    runs-on: ubuntu-latest
+    strategy: *test_strategy
+    steps: *test_steps
+
+  run-3:
+    name: NVHPC ${{ matrix.config.nvhpc }} / ${{ matrix.variant.name }} / run 3
+    needs: run-2
+    runs-on: ubuntu-latest
+    strategy: *test_strategy
+    steps: *test_steps
+
+  run-4:
+    name: NVHPC ${{ matrix.config.nvhpc }} / ${{ matrix.variant.name }} / run 4
+    needs: run-3
+    runs-on: ubuntu-latest
+    strategy: *test_strategy
+    steps: *test_steps
+
+  run-5:
+    name: NVHPC ${{ matrix.config.nvhpc }} / ${{ matrix.variant.name }} / run 5
+    needs: run-4
+    runs-on: ubuntu-latest
+    strategy: *test_strategy
+    steps: *test_steps
+
+  run-6:
+    name: NVHPC ${{ matrix.config.nvhpc }} / ${{ matrix.variant.name }} / run 6
+    needs: run-5
+    runs-on: ubuntu-latest
+    strategy: *test_strategy
+    steps: *test_steps
+
+  run-7:
+    name: NVHPC ${{ matrix.config.nvhpc }} / ${{ matrix.variant.name }} / run 7
+    needs: run-6
+    runs-on: ubuntu-latest
+    strategy: *test_strategy
+    steps: *test_steps
+
+  run-8:
+    name: NVHPC ${{ matrix.config.nvhpc }} / ${{ matrix.variant.name }} / run 8
+    needs: run-7
+    runs-on: ubuntu-latest
+    strategy: *test_strategy
+    steps: *test_steps
