@@ -110,6 +110,58 @@ jobs:
     uses: ./.github/workflows/nvhpc-test.yml
     with: *nvhpc_25_1_tp_haswell
 
+  nvhpc-25-1-mvect-simd-256-run-1:
+    name: NVHPC 25.1 / mvect-simd-256 / run 1
+    uses: ./.github/workflows/nvhpc-test.yml
+    with: &nvhpc_25_1_mvect_simd_256
+      nvhpc: "25.1"
+      image: nvcr.io/nvidia/nvhpc:25.1-devel-cuda12.6-ubuntu22.04
+      variant: mvect-simd-256
+      compile_flags: "-Mvect=simd:256"
+      run_env: ""
+
+  nvhpc-25-1-mvect-simd-256-run-2:
+    name: NVHPC 25.1 / mvect-simd-256 / run 2
+    needs: nvhpc-25-1-mvect-simd-256-run-1
+    uses: ./.github/workflows/nvhpc-test.yml
+    with: *nvhpc_25_1_mvect_simd_256
+
+  nvhpc-25-1-mvect-simd-256-run-3:
+    name: NVHPC 25.1 / mvect-simd-256 / run 3
+    needs: nvhpc-25-1-mvect-simd-256-run-2
+    uses: ./.github/workflows/nvhpc-test.yml
+    with: *nvhpc_25_1_mvect_simd_256
+
+  nvhpc-25-1-mvect-simd-256-run-4:
+    name: NVHPC 25.1 / mvect-simd-256 / run 4
+    needs: nvhpc-25-1-mvect-simd-256-run-3
+    uses: ./.github/workflows/nvhpc-test.yml
+    with: *nvhpc_25_1_mvect_simd_256
+
+  nvhpc-25-1-mvect-simd-256-run-5:
+    name: NVHPC 25.1 / mvect-simd-256 / run 5
+    needs: nvhpc-25-1-mvect-simd-256-run-4
+    uses: ./.github/workflows/nvhpc-test.yml
+    with: *nvhpc_25_1_mvect_simd_256
+
+  nvhpc-25-1-mvect-simd-256-run-6:
+    name: NVHPC 25.1 / mvect-simd-256 / run 6
+    needs: nvhpc-25-1-mvect-simd-256-run-5
+    uses: ./.github/workflows/nvhpc-test.yml
+    with: *nvhpc_25_1_mvect_simd_256
+
+  nvhpc-25-1-mvect-simd-256-run-7:
+    name: NVHPC 25.1 / mvect-simd-256 / run 7
+    needs: nvhpc-25-1-mvect-simd-256-run-6
+    uses: ./.github/workflows/nvhpc-test.yml
+    with: *nvhpc_25_1_mvect_simd_256
+
+  nvhpc-25-1-mvect-simd-256-run-8:
+    name: NVHPC 25.1 / mvect-simd-256 / run 8
+    needs: nvhpc-25-1-mvect-simd-256-run-7
+    uses: ./.github/workflows/nvhpc-test.yml
+    with: *nvhpc_25_1_mvect_simd_256
+
   nvhpc-25-1-mth-iarch-avx2-run-1:
     name: NVHPC 25.1 / mth-iarch-avx2 / run 1
     uses: ./.github/workflows/nvhpc-test.yml
@@ -266,6 +318,58 @@ jobs:
     uses: ./.github/workflows/nvhpc-test.yml
     with: *nvhpc_26_1_tp_haswell
 
+  nvhpc-26-1-mvect-simd-256-run-1:
+    name: NVHPC 26.1 / mvect-simd-256 / run 1
+    uses: ./.github/workflows/nvhpc-test.yml
+    with: &nvhpc_26_1_mvect_simd_256
+      nvhpc: "26.1"
+      image: nvcr.io/nvidia/nvhpc:26.1-devel-cuda13.1-ubuntu22.04
+      variant: mvect-simd-256
+      compile_flags: "-Mvect=simd:256"
+      run_env: ""
+
+  nvhpc-26-1-mvect-simd-256-run-2:
+    name: NVHPC 26.1 / mvect-simd-256 / run 2
+    needs: nvhpc-26-1-mvect-simd-256-run-1
+    uses: ./.github/workflows/nvhpc-test.yml
+    with: *nvhpc_26_1_mvect_simd_256
+
+  nvhpc-26-1-mvect-simd-256-run-3:
+    name: NVHPC 26.1 / mvect-simd-256 / run 3
+    needs: nvhpc-26-1-mvect-simd-256-run-2
+    uses: ./.github/workflows/nvhpc-test.yml
+    with: *nvhpc_26_1_mvect_simd_256
+
+  nvhpc-26-1-mvect-simd-256-run-4:
+    name: NVHPC 26.1 / mvect-simd-256 / run 4
+    needs: nvhpc-26-1-mvect-simd-256-run-3
+    uses: ./.github/workflows/nvhpc-test.yml
+    with: *nvhpc_26_1_mvect_simd_256
+
+  nvhpc-26-1-mvect-simd-256-run-5:
+    name: NVHPC 26.1 / mvect-simd-256 / run 5
+    needs: nvhpc-26-1-mvect-simd-256-run-4
+    uses: ./.github/workflows/nvhpc-test.yml
+    with: *nvhpc_26_1_mvect_simd_256
+
+  nvhpc-26-1-mvect-simd-256-run-6:
+    name: NVHPC 26.1 / mvect-simd-256 / run 6
+    needs: nvhpc-26-1-mvect-simd-256-run-5
+    uses: ./.github/workflows/nvhpc-test.yml
+    with: *nvhpc_26_1_mvect_simd_256
+
+  nvhpc-26-1-mvect-simd-256-run-7:
+    name: NVHPC 26.1 / mvect-simd-256 / run 7
+    needs: nvhpc-26-1-mvect-simd-256-run-6
+    uses: ./.github/workflows/nvhpc-test.yml
+    with: *nvhpc_26_1_mvect_simd_256
+
+  nvhpc-26-1-mvect-simd-256-run-8:
+    name: NVHPC 26.1 / mvect-simd-256 / run 8
+    needs: nvhpc-26-1-mvect-simd-256-run-7
+    uses: ./.github/workflows/nvhpc-test.yml
+    with: *nvhpc_26_1_mvect_simd_256
+
   nvhpc-26-1-mth-iarch-avx2-run-1:
     name: NVHPC 26.1 / mth-iarch-avx2 / run 1
     uses: ./.github/workflows/nvhpc-test.yml
@@ -421,6 +525,58 @@ jobs:
     needs: nvhpc-26-3-tp-haswell-run-7
     uses: ./.github/workflows/nvhpc-test.yml
     with: *nvhpc_26_3_tp_haswell
+
+  nvhpc-26-3-mvect-simd-256-run-1:
+    name: NVHPC 26.3 / mvect-simd-256 / run 1
+    uses: ./.github/workflows/nvhpc-test.yml
+    with: &nvhpc_26_3_mvect_simd_256
+      nvhpc: "26.3"
+      image: nvcr.io/nvidia/nvhpc:26.3-devel-cuda13.1-ubuntu22.04
+      variant: mvect-simd-256
+      compile_flags: "-Mvect=simd:256"
+      run_env: ""
+
+  nvhpc-26-3-mvect-simd-256-run-2:
+    name: NVHPC 26.3 / mvect-simd-256 / run 2
+    needs: nvhpc-26-3-mvect-simd-256-run-1
+    uses: ./.github/workflows/nvhpc-test.yml
+    with: *nvhpc_26_3_mvect_simd_256
+
+  nvhpc-26-3-mvect-simd-256-run-3:
+    name: NVHPC 26.3 / mvect-simd-256 / run 3
+    needs: nvhpc-26-3-mvect-simd-256-run-2
+    uses: ./.github/workflows/nvhpc-test.yml
+    with: *nvhpc_26_3_mvect_simd_256
+
+  nvhpc-26-3-mvect-simd-256-run-4:
+    name: NVHPC 26.3 / mvect-simd-256 / run 4
+    needs: nvhpc-26-3-mvect-simd-256-run-3
+    uses: ./.github/workflows/nvhpc-test.yml
+    with: *nvhpc_26_3_mvect_simd_256
+
+  nvhpc-26-3-mvect-simd-256-run-5:
+    name: NVHPC 26.3 / mvect-simd-256 / run 5
+    needs: nvhpc-26-3-mvect-simd-256-run-4
+    uses: ./.github/workflows/nvhpc-test.yml
+    with: *nvhpc_26_3_mvect_simd_256
+
+  nvhpc-26-3-mvect-simd-256-run-6:
+    name: NVHPC 26.3 / mvect-simd-256 / run 6
+    needs: nvhpc-26-3-mvect-simd-256-run-5
+    uses: ./.github/workflows/nvhpc-test.yml
+    with: *nvhpc_26_3_mvect_simd_256
+
+  nvhpc-26-3-mvect-simd-256-run-7:
+    name: NVHPC 26.3 / mvect-simd-256 / run 7
+    needs: nvhpc-26-3-mvect-simd-256-run-6
+    uses: ./.github/workflows/nvhpc-test.yml
+    with: *nvhpc_26_3_mvect_simd_256
+
+  nvhpc-26-3-mvect-simd-256-run-8:
+    name: NVHPC 26.3 / mvect-simd-256 / run 8
+    needs: nvhpc-26-3-mvect-simd-256-run-7
+    uses: ./.github/workflows/nvhpc-test.yml
+    with: *nvhpc_26_3_mvect_simd_256
 
   nvhpc-26-3-mth-iarch-avx2-run-1:
     name: NVHPC 26.3 / mth-iarch-avx2 / run 1
