@@ -85,7 +85,7 @@ jobs:
             -v "$GITHUB_WORKSPACE:/workspace" \
             -w /workspace \
             "$NVHPC_IMAGE" \
-            bash -lc 'set -euo pipefail; nvfortran -O3 -fast test.f90 -o out'
+            bash -lc 'set -euo pipefail; nvfortran -O3 -fast test.f90 -o out; ./out'
 
       - name: Queue another attempt
         if: steps.cpu.outputs.avx512 != 'true' && fromJSON(steps.attempt.outputs.current) < fromJSON(steps.attempt.outputs.max)
@@ -111,8 +111,7 @@ jobs:
 
           if [ "${{ steps.attempt.outputs.current }}" -ge "${{ steps.attempt.outputs.max }}" ]; then
             echo "::error::No AVX-512 runner found after ${{ steps.attempt.outputs.max }} attempts."
+            exit 1
           else
-            echo "::error::This runner lacks AVX-512. A replacement workflow run was queued."
+            echo "::notice::This runner lacks AVX-512. A replacement workflow run was queued."
           fi
-
-          exit 1
