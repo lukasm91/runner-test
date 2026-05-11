@@ -1,0 +1,116 @@
+name: NVHPC AVX-512 Compile
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      attempt:
+        description: Retry attempt number used by the workflow when it reschedules itself.
+        required: false
+        default: "1"
+      max_attempts:
+        description: Maximum number of CPU scheduling attempts before giving up.
+        required: false
+        default: "30"
+
+permissions:
+  actions: write
+  contents: read
+
+jobs:
+  compile:
+    name: Compile on AVX-512 runner
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      NVHPC_IMAGE: nvcr.io/nvidia/nvhpc:25.1-devel-cuda12.6-ubuntu22.04
+      RAW_ATTEMPT: ${{ inputs.attempt }}
+      RAW_MAX_ATTEMPTS: ${{ inputs.max_attempts }}
+
+    steps:
+      - name: Resolve attempt counter
+        id: attempt
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          current="${RAW_ATTEMPT:-1}"
+          max="${RAW_MAX_ATTEMPTS:-30}"
+
+          case "$current" in
+            ''|*[!0-9]*) current=1 ;;
+          esac
+
+          case "$max" in
+            ''|*[!0-9]*) max=30 ;;
+          esac
+
+          current=$((10#$current))
+          max=$((10#$max))
+
+          echo "current=$current" >> "$GITHUB_OUTPUT"
+          echo "next=$((current + 1))" >> "$GITHUB_OUTPUT"
+          echo "max=$max" >> "$GITHUB_OUTPUT"
+
+      - name: Check host CPU for AVX-512
+        id: cpu
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          lscpu
+
+          if grep -m1 -Eq '^flags[[:space:]]*:.*(^|[[:space:]])avx512f([[:space:]]|$)' /proc/cpuinfo; then
+            echo "avx512=true" >> "$GITHUB_OUTPUT"
+            echo "AVX-512 detected on host CPU."
+          else
+            echo "avx512=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::No AVX-512 detected on this host. Stopping before checkout and container pull."
+          fi
+
+      - name: Check out repository
+        if: steps.cpu.outputs.avx512 == 'true'
+        uses: actions/checkout@v4
+
+      - name: Compile test.f90 with NVHPC
+        if: steps.cpu.outputs.avx512 == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          docker run --rm --pull always \
+            -v "$GITHUB_WORKSPACE:/workspace" \
+            -w /workspace \
+            "$NVHPC_IMAGE" \
+            bash -lc 'set -euo pipefail; nvfortran -O3 -fast test.f90 -o out'
+
+      - name: Queue another attempt
+        if: steps.cpu.outputs.avx512 != 'true' && fromJSON(steps.attempt.outputs.current) < fromJSON(steps.attempt.outputs.max)
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+
+          gh workflow run nvhpc-avx512.yml \
+            --ref "$GITHUB_REF_NAME" \
+            -f attempt="${{ steps.attempt.outputs.next }}" \
+            -f max_attempts="${{ steps.attempt.outputs.max }}"
+
+          echo "::notice::Queued attempt ${{ steps.attempt.outputs.next }} because this runner lacks AVX-512."
+
+      - name: Stop non-AVX-512 attempt
+        if: steps.cpu.outputs.avx512 != 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          if [ "${{ steps.attempt.outputs.current }}" -ge "${{ steps.attempt.outputs.max }}" ]; then
+            echo "::error::No AVX-512 runner found after ${{ steps.attempt.outputs.max }} attempts."
+          else
+            echo "::error::This runner lacks AVX-512. A replacement workflow run was queued."
+          fi
+
+          exit 1
